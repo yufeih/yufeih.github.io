@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Think Functional</title>
+    <title>Functional Thinking</title>
     <meta charset="utf-8">
     <style>
 
+      @import url(https://fonts.googleapis.com/css?family=Averia+Sans+Libre);
       @import url(https://fonts.googleapis.com/css?family=Droid+Serif);
       @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
       @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
 
       body {
-        font-family: 'Droid Serif';
+        font-family: 'Droid Serif', cursive;
       }
       h1, h2, h3 {
         font-family: 'Yanone Kaffeesatz';
@@ -58,7 +59,6 @@
       .inverse {
         background: #272822;
         color: #777872;
-        text-shadow: 0 0 20px #333;
       }
       .inverse h1, .inverse h2 {
         color: #f3f3f3;
@@ -124,13 +124,120 @@
 
 class: center, middle, inverse
 
-# Think Functional
+# Functional Thinking
+
+in c#
 
 ---
-
 class: inverse
 
-# Agenda
+# Functional Thinking
+
+### Practical purpose functional thinking
+
+### Not about learning functional programming (monad, tail recursion...)
+
+### Learning a new language is easy, learning a new paradigm is **hard**
+
+### Apply functional thinking to object oriented programming
+
+### Not a silver bullet
+
+### I am biased
+
+---
+class: inverse
+
+# The Kindom of Nouns
+
+http://steve-yegge.blogspot.sg/2006/03/execution-in-kingdom-of-nouns.html
+
+### Kindom of Nouns, Abjectives, Verbs
+### Verbs are *owned* by Nouns
+### Verbs must be *escorted* by Nouns (with *VerbEscorter*)
+### Banish entirely *all* verbs except one: *Execute*
+
+---
+class: inverse center middle
+
+# Object-Oriented Thinking
+
+aka * **Noun**-Oriented Thinking*
+
+---
+class: inverse
+
+# Object-Oriented Thinking
+
+### What is good about OOP
+### What is bad about OOP
+### Why OOP dominate the industry
+### How functional thinking might help
+
+---
+class: inverse
+
+# Object-Oriented Programming
+
+### Abstraction
+### Encapsulation
+### Composition
+### Inheritance
+
+---
+class: inverse
+
+# Object-Oriented Programming
+
+### Abstraction *GENERALLY GOOD*
+### Encapsulation *DOES NOT WORK*
+### Composition *GENERALLY GOOD*
+### Inheritance *IRRELEVANT*
+
+---
+class: inverse
+
+# Inheritance
+
+#### Inherit both the *Good* and the *Bad*
+
+---
+class: inverse
+
+# Inheritance
+
+#### *Protected* Inheritance is BAD for composition
+
+```csharp
+public class ContentManager /* Framework class */
+{
+    public virtual T Load<T>(string assetName);
+
+    protected virtual Stream OpenStream(string assetName);
+}
+
+public class ZipContentManager : ContentManager /* Custom class */
+{
+    protected override Stream OpenStream(string assetName) { }
+}
+
+public class EncryptedContentManager : ContentManager /* Custom class */
+{
+    protected override Stream OpenStream(string assetName) { }
+}
+
+public class EncryptedZipContentManager : ContentManager /* Custom class */
+{
+    protected override Stream OpenStream(string assetName)
+    {
+        return /* how ????? */
+    }
+}
+
+```
+
+
+---
 
 
     </textarea>
