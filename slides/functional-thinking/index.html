@@ -169,10 +169,9 @@ class: inverse
 
 # Object-Oriented Thinking
 
+### Why OOP dominate the industry
 ### What is good about OOP
 ### What is bad about OOP
-### Why OOP dominate the industry
-### How functional thinking might help
 
 ---
 class: inverse
@@ -201,6 +200,10 @@ class: inverse
 
 #### Inherit both the *Good* and the *Bad*
 
+
+```
+PLACEHOLDER
+```
 ---
 class: inverse
 
@@ -233,12 +236,431 @@ public class EncryptedZipContentManager : ContentManager /* Custom class */
         return /* how ????? */
     }
 }
+```
+---
+class: inverse
+
+# Composition
+
+#### Chain to compose behaviors of the same shape
+
+```csharp
+public class DelegatingHandler
+{
+    // Allow composition through chaining.
+    protected DelegatingHandler(HttpMessageHandler innerHandler);
+    protected virtual Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request);
+}
+
+public class HandlerA : DelegatingHandler { }
+
+public class HandlerB : DelegatingHandler { }
+
+var http = new HttpClient(new HandlerB(new HandlerA()));
+```
+---
+class: inverse
+
+# Composition
+
+#### Chain to compose behaviors of the same shape
+
+```csharp
+public interface IDelegatingHandler
+{
+    Task<HttpResponseMessage> SendAsync(HttpRequestMessage request);
+}
+
+public class HandlerA : IDelegatingHandler
+{
+    public HandlerA(IDelegatingHandler innerHandler) { }
+}
+
+public class HandlerB : IDelegatingHandler
+{
+    public HandlerB(IDelegatingHandler innerHandler) { }
+}
+
+var http = new HttpClient(new HandlerB(new HandlerA()));
+```
+---
+class: inverse
+
+# Composition
+
+#### Expose just enough functionality.
+
+```csharp
+public interface IDelegatingHandler
+{
+    Task<HttpResponseMessage> SendAsync(HttpRequestMessage request);
+}
+
+public class HandlerA : IDelegatingHandler
+{
+    public HandlerA(IDelegatingHandler innerHandler) { }
+}
+
+public class HandlerB : IDelegatingHandler
+{
+    public HandlerB(IDelegatingHandler innerHandler) { }
+}
+
+var http = new HttpClient(new HandlerB(new HandlerA()));
+```
+---
+class: inverse center middle
+
+# Seperate States and Behaviors
+
+### Software is Data Structure (**state**) + Algorithm (**behavior**)
+
+---
+class: inverse
+
+# Seperate States and Behaviors
+
+### Example using Object Oriented Thinking:
+
+```csharp
+public interface IAnimation
+{
+    void Draw();
+    void Update();
+}
+
+public class CircleAnimation : IAnimation
+{
+    public Point Center;
+    public float Radius;
+
+    public void Draw() => { }
+    public void Update() { Center += new Point(1, 0); }
+}
+
+public class BoxAnimation : IAnimation
+{
+    public Point Center;
+    public float Size;
+
+    public void Draw() => { }
+    public void Update() { Center += new Point(1, 0); }
+}
+```
+---
+class: inverse
+
+# Seperate States and Behaviors
+
+### Example using Functional Thinking:
+
+```csharp
+public enum ShapeType { Box, Circle }
+
+public class Shape
+{
+    public ShapeType Type;
+    public Point Center;
+    public float Size;
+}
+
+public void Draw(Shape shape)
+{
+    if (shape.Type == ShapeType.Box) DrawBox(shape.Size);
+    if (shape.Type == ShapeType.Circle) DrawCircle(shape.Size);
+}
+
+public Shape Update(Shape shape)
+{
+    return new Shape(shape.Type, shape.Size, shape.Center + new Point(1, 0));
+}
+```
+---
+class: inverse
+
+# OOP vs FP: Extensibility
+
+### Object Oriented Thinking
+
+## Closed set of operations and open set of types
+
+### Functional Thinking
+
+## Closed set of types and open set of operations
+
+---
+class: inverse
+
+# OOP Challenges in Distributed and Multi-threaded System
+
+### Mixed state and behavior
+### States transfer easily
+### Behaviors *does not* transfer
+### Behaviors can be distributed
+### Behaviors mutates states
+
+---
+class: inverse
+
+# Make States Immutable
+
+### Types of Immutability
+
+## Mutable
+
+```csharp
+public class MyService
+{
+    public string Endpoint { get; }
+    public List<Config> Configs { get; } = new List<Config>();
+
+    public void ChangeEndpoint(string endpoint)
+    {
+        Endpoint = endpoint;
+    }
+}
+
+public void UseMyService(MyService service) { }
 
 ```
 
+#### Contains both read and write operations
+#### Write operation has the side effect of mutating states
+#### Should typically be avoided at component boundary
+---
+class: inverse
+
+# Make States Immutable
+
+### Types of Immutability
+
+## Seen Immutability
+```csharp
+public class MyService
+{
+    public string Endpoint { get; }
+    public IReadOnlyList<Config> Configs { get; } = new List<Config>();
+
+    private void OnConfigChanged(string endpoint)
+    {
+        Endpoint = endpoint;
+    }
+}
+
+public void UseMyService(MyService service) { }
+```
+
+#### Contains only public read operations
+#### Consumer cannot mutate state, safe to be passed around
+#### Component itself can mutate state, causing unwanted side effects.
 
 ---
+class: inverse
 
+# Make States Immutable
+
+### Types of Immutability
+
+## True Immutability
+```csharp
+public class MyService
+{
+    private readonly string _endpoint;
+
+    public string Endpoint => _endpoint;
+
+    public ImmutableList<Config> Configs { get; } = new ImmutableList<Config>();
+}
+
+public void UseMyService(MyService service) { }
+```
+
+#### No one including the class itself can mutate anything
+#### Safe to pass to anything
+#### Mutate state by creating a copy of self
+#### May have performance concerns due to a lot of copying
+
+---
+class: inverse
+
+# Make States Immutable
+
+### Mutate an Immutable Object
+
+```csharp
+public class MyService
+{
+    private readonly TimeSpan _timeout;
+    private readonly string _endpoint;
+
+    public MyService(string endpoint, TimeSpan timeout)
+    {
+        _endpoint = endpoint;
+        _timeout = timeout;
+    }
+
+    public MyService WithEndpoint(string endpoint)
+    {
+        return endpoint == _endpoint ? this : new MyService(endpoint, _timeout);
+    }
+
+    public MyService WithTimeout(TimeSpan timeout)
+    {
+        return timeout == _timeout ? this : new MyService(_endpoint, timeout);
+    }
+}
+
+var newService = oldService.WithEndpoint("www").WithTimeout(TimeSpan.Zero);
+
+```
+---
+class: inverse
+
+# Make States Immutable
+
+### Types of Immutability
+
+## DTO
+
+```csharp
+public class Entity
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public DateTime LastUpdated { get; set; }
+}
+
+```
+
+#### Ideal for serialization (communication, storage)
+#### Should use with established patterns
+---
+class: inverse
+
+# Make Behaviors Pure
+
+### Types of Pureness
+
+## Pure Functions
+```csharp
+public int AddOne(int n) => n + 1;
+
+public int Count<T>(List<T> list) => list.Count;
+
+public int CountPlusOne<T>(List<T> list) => AddOne(list.Count);
+```
+
+#### Does not use any non-local variable
+#### Does not call any other impure functions
+#### Have no side effects at all
+#### Determinstics: Same input always produces the same output
+#### Always thread safe
+#### Test once, works forever
+
+---
+class: inverse
+
+# Make Behaviors Pure
+
+### Types of Pureness
+
+## Functions with no seen side effects
+```csharp
+public int AddOne(int n)
+{
+    File.AppendAllText("log.txt", $"adding {n}");
+    return n + 1;
+}
+
+public string GetFileName(string name) => $"{DateTime.UtcNow}/{name}";
+```
+
+#### Does not modify parameters
+#### Only calls functions with no seen side effects
+#### Have no seen side effects to the caller
+#### Determinism / Thread-Safety is not garrenteed
+#### Does not impact other parts of the code
+
+---
+class: inverse
+
+# Make Behaviors Pure
+
+### Types of Pureness
+
+## Functions with side effects
+```csharp
+public void ProcessMessage(Message message)
+{
+    if (!message.Processed)
+    {
+        /* */
+        message.Processed = true;
+    }
+}
+```
+
+#### Mutates input parameters
+#### Calls functions that mutates states
+#### Caller needs to aware of potential changes.
+#### Hard to achieve thread-safety
+#### Easy to break other code or broken by changes else where
+
+---
+class: inverse
+
+# Functional Thinking is Evading C#.
+
+programming language guides your thoughts
+
+### Nested Functions (upcoming)
+```csharp
+public int Outer(int n)
+{
+    int Inner(int n) => n++;
+
+    return Inner(n);
+}
+```
+
+### Tuples (upcoming)
+```csharp
+public (int sum, int avg) Tally(IEnumerable<int> numbers)
+{
+    return (numbers.Sum(), numbers.Average());
+}
+```
+---
+class: inverse
+
+# Functional thinking is Evading C#.
+
+programming language guides your thoughts
+
+### Record Types (upcoming)
+```csharp
+class Point(float X, float Y);
+
+class ProductController(IStore store, INotificationService notification);
+```
+
+### With Expressions (upcoming)
+```csharp
+class Point(float X, float Y);
+
+var newPoint = point with { Y = 10 }
+```
+---
+class: inverse center middle
+
+key take aways
+## Seperate States and Behaviors
+as much as possible
+## Make States Immutable
+as much as possible
+## Make Behaviors Pure
+as much as possible
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
