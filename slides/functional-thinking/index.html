@@ -369,8 +369,9 @@ class: inverse
 
 # Encapsulation
 
-### Encourages Mutable State Sharing
 ### Just does not work in a paralleled world
+### Prevents unintended state mutation, but can never prevent sharing.
+### Encourages Mutable State Sharing
 
 ``` csharp
 public class GitRepository
