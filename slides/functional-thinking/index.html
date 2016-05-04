@@ -160,14 +160,14 @@ http://steve-yegge.blogspot.sg/2006/03/execution-in-kingdom-of-nouns.html
 ---
 class: inverse center middle
 
-# Object-Oriented Thinking
+# Object-Oriented Programming
 
-aka * **Noun**-Oriented Thinking*
+aka * **Noun**-Oriented Programming*
 
 ---
 class: inverse
 
-# Object-Oriented Thinking
+# Object-Oriented Programming
 
 ### Why OOP dominate the industry
 ### What is good about OOP
@@ -178,38 +178,147 @@ class: inverse
 
 # Object-Oriented Programming
 
-### Abstraction
-### Encapsulation
-### Composition
-### Inheritance
+### First thing to learn about software and design
+### Gives you the illusion to compose large and complex applications from small lego pieces
+### Gain Popularity in the age of client on a single machine
+
+![Lego](http://mentalfloss.com/sites/default/legacy/wp-content/uploads/2008/08/legos.jpg)
+![Lego](http://thegreatgeekmanual.com/images/geekhistory/august/windows-95-start-button.png)
 
 ---
 class: inverse
 
 # Object-Oriented Programming
 
-### Abstraction *GENERALLY GOOD*
-### Encapsulation *DOES NOT WORK*
+### Inheritance
+### Composition
+### Abstraction
+### Encapsulation
+
+---
+class: inverse
+
+# Object-Oriented Programming
+
+### ~~Inheritance~~ *IRRELEVANT*
 ### Composition *GENERALLY GOOD*
-### Inheritance *IRRELEVANT*
+### Abstraction *GENERALLY GOOD*
+### ~~**Encapsulation**~~ *DOES NOT WORK*
 
 ---
 class: inverse
 
 # Inheritance
 
+#### Deep Inheritance > 2, not implementing an interface or abstract class
+#### It does not solve any real problem
 #### Inherit both the *Good* and the *Bad*
+#### Inherit unwanted surface area
 
+---
+class: inverse
 
-```
-PLACEHOLDER
+# Composition and Abstraction
+
+### Chain to compose behaviors of the same shape (abstract class)
+
+```csharp
+public class DelegatingHandler
+{
+    // Allow composition through chaining.
+    protected DelegatingHandler(HttpMessageHandler innerHandler);
+    protected virtual Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request);
+}
+
+public class HandlerA : DelegatingHandler { }
+
+public class HandlerB : DelegatingHandler { }
+
+var http = new HttpClient(new HandlerB(new HandlerA()));
 ```
 ---
 class: inverse
 
-# Inheritance
+# Composition and Abstraction
 
-#### *Protected* Inheritance is BAD for composition
+### Chain to compose behaviors of the same shape (interface)
+
+```csharp
+public interface IDelegatingHandler
+{
+    Task<HttpResponseMessage> SendAsync(HttpRequestMessage request);
+}
+
+public class HandlerA : IDelegatingHandler
+{
+    public HandlerA(IDelegatingHandler innerHandler) { }
+}
+
+public class HandlerB : IDelegatingHandler
+{
+    public HandlerB(IDelegatingHandler innerHandler) { }
+}
+
+var http = new HttpClient(new HandlerB(new HandlerA()));
+```
+---
+class: inverse
+
+# Composition and Abstraction
+
+### Abstract Class vs Interface + Extension Method.
+
+- Changing abstract classes can be backward compatible.
+- Can contain static methods and overridable method.
+- Abstract base class is open for change (suffer the same problem as inheritance).
+- Interfaces are fixed and safe, a class can implement multiple interfaces.
+- Use abstract class in libraries, use interfaces when the surface area is small and precise.
+
+``` csharp
+public abstract class Foo
+{
+    public abstract void Bar();
+    public virtual void Bar2() => Bar();
+}
+
+public interface IFoo
+{
+    void Bar();
+}
+
+public static class FooExtensions
+{
+    public static void Bar2(this IFoo foo) => foo.Bar();
+}
+```
+
+---
+class: inverse
+
+# Composition and Abstraction
+
+### Test Friendly
+
+```csharp
+public interface IStore
+{
+    public string Retrieve(string key);
+    public void Store(string key, object value);
+}
+
+public class CloudStore : IStore { }
+public class InMemoryStore : IStore { }
+
+var controller = new MyController(new CloudStore()); /* In Production */
+var controller = new MyController(new InMemoryStore()); /* In Unit Tests */
+```
+---
+class: inverse
+
+# Composition and Abstraction
+
+### *protected* is BAD for composition
 
 ```csharp
 public class ContentManager /* Framework class */
@@ -240,88 +349,114 @@ public class EncryptedZipContentManager : ContentManager /* Custom class */
 ---
 class: inverse
 
-# Composition
+# Encapsulation
 
-#### Chain to compose behaviors of the same shape
+### A strategy for abstraction.
+### Objects encapsulate their state and hide it from the outside.
+### Interact with state through methods.
 
-```csharp
-public class DelegatingHandler
+``` csharp
+public class GitRepository
 {
-    // Allow composition through chaining.
-    protected DelegatingHandler(HttpMessageHandler innerHandler);
-    protected virtual Task<HttpResponseMessage> SendAsync(
-        HttpRequestMessage request);
+    public void PutFile(string file, string content);
+    public void Commit(string message);
 }
 
-public class HandlerA : DelegatingHandler { }
-
-public class HandlerB : DelegatingHandler { }
-
-var http = new HttpClient(new HandlerB(new HandlerA()));
 ```
+
 ---
 class: inverse
 
-# Composition
+# Encapsulation
 
-#### Chain to compose behaviors of the same shape
+### Encourages Mutable State Sharing
+### Just does not work in a paralleled world
 
-```csharp
-public interface IDelegatingHandler
+``` csharp
+public class GitRepository
 {
-    Task<HttpResponseMessage> SendAsync(HttpRequestMessage request);
+    public string CommitHash { get; }
+    public TimeSpan PushDuration { get; }
+
+    public void PutFile(string file, string content);
+    public void CommitAndPush(string message);
 }
 
-public class HandlerA : IDelegatingHandler
+public void DoSomeworkWithGit(GitRepository repo)
 {
-    public HandlerA(IDelegatingHandler innerHandler) { }
+    DoWorkA(repo);
+    DoWorkB(repo);
 }
 
-public class HandlerB : IDelegatingHandler
+public Task DoSomeworkWithGitAsync(GitRepository repo)
 {
-    public HandlerB(IDelegatingHandler innerHandler) { }
+    return Task.WhenAll(
+        DoWorkAAsync(repo),
+        DoWorkBAsync(repo));
 }
 
-var http = new HttpClient(new HandlerB(new HandlerA()));
-```
----
-class: inverse
-
-# Composition
-
-#### Expose just enough functionality.
-
-```csharp
-public interface IDelegatingHandler
-{
-    Task<HttpResponseMessage> SendAsync(HttpRequestMessage request);
-}
-
-public class HandlerA : IDelegatingHandler
-{
-    public HandlerA(IDelegatingHandler innerHandler) { }
-}
-
-public class HandlerB : IDelegatingHandler
-{
-    public HandlerB(IDelegatingHandler innerHandler) { }
-}
-
-var http = new HttpClient(new HandlerB(new HandlerA()));
 ```
 ---
 class: inverse center middle
 
-# Seperate States and Behaviors
+
+# **Mutable State Sharing** is the root of all evil
+
+### non-determinism = parallel processing + mutable state
+
+---
+class: inverse center middle
+
+# Functional Thinking
 
 ### Software is Data Structure (**state**) + Algorithm (**behavior**)
+---
+class: inverse
 
+# Functional Thinking
+
+### Not about functions as first class citizen
+### Not about replacing loops with lamdas
+
+``` csharp
+var items = dataSource.Where(_ => _.Age > 18).OrderBy(_ => _.Age).ToArray();
+```
+
+### Not about structure code as functions inside functions
+
+``` javascript
+function outer() {
+  function inner() {
+    function nested() {}
+  }
+}
+```
+---
+class: inverse
+
+# Functional Thinking
+
+### One question: My app is complex, where is the `state` in the codebase?
+
+## state' = *foo(*state, input*)*
+## output = *bar(*state*)*
+
+![State](http://livedoor.blogimg.jp/itsoku/imgs/7/9/791fa09a-s.png)
+
+---
+class: inverse center middle
+
+# Functional Thinking
+
+### Seperate States from Behaviors
+### Make States Immutable
+### Make Behaviors Pure
 ---
 class: inverse
 
 # Seperate States and Behaviors
 
-### Example using Object Oriented Thinking:
+### Example using Object Oriented Programming:
 
 ```csharp
 public interface IAnimation
@@ -353,7 +488,7 @@ class: inverse
 
 # Seperate States and Behaviors
 
-### Example using Functional Thinking:
+### Example using Functional Programming:
 
 ```csharp
 public enum ShapeType { Box, Circle }
@@ -379,26 +514,24 @@ public Shape Update(Shape shape)
 ---
 class: inverse
 
-# OOP vs FP: Extensibility
+# Seperate States and Behaviors
 
-### Object Oriented Thinking
-
-## Closed set of operations and open set of types
-
-### Functional Thinking
-
-## Closed set of types and open set of operations
+### States can transfer
+### Behaviors *does not* transfer
+### Behaviors are different in different places
 
 ---
 class: inverse
 
-# OOP Challenges in Distributed and Multi-threaded System
+# Seperate States and Behaviors
 
-### Mixed state and behavior
-### States transfer easily
-### Behaviors *does not* transfer
-### Behaviors can be distributed
-### Behaviors mutates states
+### Object Oriented Programming
+
+## Closed set of operations and open set of types
+
+### Functional Programming
+
+## Closed set of types and open set of operations
 
 ---
 class: inverse
@@ -610,6 +743,44 @@ public void ProcessMessage(Message message)
 ---
 class: inverse
 
+# Functional Thinking
+
+### A second attempt at solving the encapsulation problem
+
+``` csharp
+public class GitChange
+{
+    public readonly ChangeType ChangeType;
+    public readonly string File;
+    public readonly string Content;
+}
+
+public class GitPushResult
+{
+    public readonly string CommitHash;
+    public readonly TimeSpan PushDuration;
+}
+
+public class GitRepository
+{
+    public GitPushResult CommitAndPush(IEnumerable<GitChange> changes, string message);
+}
+
+public Task DoSomeworkWithGitAsync(GitRepository repo)
+{
+    return Task.WhenAll(
+        DoWorkAAsync(repo),
+        DoWorkBAsync(repo));
+}
+
+```
+---
+class: inverse center middle
+
+# Functional Programming is Evading C#.
+---
+class: inverse
+
 # Functional Thinking is Evading C#.
 
 programming language guides your thoughts
@@ -654,13 +825,12 @@ var newPoint = point with { Y = 10 }
 ---
 class: inverse center middle
 
-key take aways
-## Seperate States and Behaviors
-as much as possible
+#### Summary
+
+## Mutable State Sharing is the root of all evil
+## Seperate States from Behaviors
 ## Make States Immutable
-as much as possible
 ## Make Behaviors Pure
-as much as possible
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
