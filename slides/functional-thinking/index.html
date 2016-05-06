@@ -440,6 +440,16 @@ public class GitRepository
 }
 ```
 ---
+class: inverse
+
+# Encapsulation (To avoid sharing)
+
+#### Some nodes encapsulate state
+#### Writing to those nodes only through their parent node
+#### Hard to deal with cross cutting concerns.
+
+![nodes](http://www.lightenna.com/sitefiles/lightenna.com/tree_diagram_big.gif)
+---
 class: inverse center middle
 
 
@@ -868,9 +878,8 @@ var newPoint = point with { Y = 10 }
 ---
 class: inverse center middle
 
-#### Summary
-
 ## Mutable State Sharing is the root of all evil
+#### so,
 ## Seperate States from Behaviors
 ## Make States Immutable
 ## Make Behaviors Pure
