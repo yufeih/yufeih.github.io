@@ -370,15 +370,10 @@ class: inverse
 # Encapsulation
 
 ### Just does not work in a paralleled world
-### Prevents unintended state mutation, but can never prevent sharing.
-### Encourages Mutable State Sharing
 
 ``` csharp
 public class GitRepository
 {
-    public string CommitHash { get; }
-    public TimeSpan PushDuration { get; }
-
     public void PutFile(string file, string content);
     public void CommitAndPush(string message);
 }
@@ -396,6 +391,53 @@ public Task DoSomeworkWithGitAsync(GitRepository repo)
         DoWorkBAsync(repo));
 }
 
+```
+---
+class: inverse
+
+# Encapsulation
+
+### Sharing and open systems.
+
+``` csharp
+public class GitRepository
+{
+    public void PutFile(string file, string content);
+    public void CommitAndPush(string message);
+}
+
+public void DoSomeworkWithGit(GitRepository repo)
+{
+    repo.PutFile("status", "working");
+    OnDoingStuff?.Invoke();
+    // Do stuff...
+    repo.PutFile("status", "completed")
+    repo.CommitAndPush("done A");
+}
+
+private void OnDoingStuff()
+{
+    this.Repo.PutFile("", "");
+    this.Repo.CommitAndPush("done B");
+}
+
+```
+---
+class: inverse
+
+# Encapsulation
+
+### Encourages Mutable State Sharing
+
+``` csharp
+public class GitRepository
+{
+    public string CommitHash { get; }
+    public TimeSpan PushDuration { get; }
+
+    public void PutFile(string file, string content);
+    public void CommitAndPush(string message);
+}
 ```
 ---
 class: inverse center middle
