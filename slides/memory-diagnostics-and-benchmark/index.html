@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>.NET Memory Diagnostics and Benchmark</title>
+    <meta charset="utf-8">
+    <style>
+
+      @import url(https://fonts.googleapis.com/css?family=Averia+Sans+Libre);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif);
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: 'Droid Serif', cursive;
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 400;
+        margin-bottom: 0;
+      }
+      .remark-slide-content h1 { font-size: 3em; }
+      .remark-slide-content h2 { font-size: 2em; }
+      .remark-slide-content h3 { font-size: 1.6em; }
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      li p { line-height: 1.25em; }
+      .red { color: #fa0000; }
+      .large { font-size: 2em; }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      code {
+        background: #e7e8e2;
+        border-radius: 5px;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-code-line-highlighted     { background-color: #373832; }
+      .pull-left {
+        float: left;
+        width: 47%;
+      }
+      .pull-right {
+        float: right;
+        width: 47%;
+      }
+      .pull-right ~ p {
+        clear: both;
+      }
+      #slideshow .slide .content code {
+        font-size: 0.8em;
+      }
+      #slideshow .slide .content pre code {
+        font-size: 0.9em;
+        padding: 15px;
+      }
+      .inverse {
+        background: #272822;
+        color: #777872;
+      }
+      .inverse h1, .inverse h2 {
+        color: #f3f3f3;
+        line-height: 0.8em;
+      }
+
+      /* Slide-specific styling */
+      #slide-inverse .footnote {
+        bottom: 12px;
+        left: 20px;
+      }
+      #slide-how .slides {
+        font-size: 0.9em;
+        position: absolute;
+        top:  151px;
+        right: 140px;
+      }
+      #slide-how .slides h3 {
+        margin-top: 0.2em;
+      }
+      #slide-how .slides .first, #slide-how .slides .second {
+        padding: 1px 20px;
+        height: 90px;
+        width: 120px;
+        -moz-box-shadow: 0 0 10px #777;
+        -webkit-box-shadow: 0 0 10px #777;
+        box-shadow: 0 0 10px #777;
+      }
+      #slide-how .slides .first {
+        background: #fff;
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        z-index: 1;
+      }
+      #slide-how .slides .second {
+        position: relative;
+        background: #fff;
+        z-index: 0;
+      }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+      }
+      .remark-container { background-color: #272822 }
+      .remark-slide-scaler { box-shadow: 0 0 }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, inverse
+
+# .NET Memory Diagnostics and Benchmark
+
+---
+class: inverse
+
+# Agenda
+
+- .NET Memory Management Brief
+
+- Diagnostics .NET Memory Dumps using Visual Studio
+
+  - Case Study 1: OL Linq Memory Leak
+
+  - Case Study 2: OL Linq Hang
+
+  - Case Study 3: Docs Logging Memory Leak
+
+- Memory and Performance Benchmark
+
+---
+class: inverse
+
+# .NET Memory Management Brief
+
+- Stack & heap
+
+- Heap types
+
+- Approaches to memory management
+
+   - `C/C++`: manual/smart pointers   
+   - `Objective-C/Visual Basic`: Reference counting
+   - `.NET CLR/Java`: GC with mark & sweep
+
+---
+class: inverse
+
+# Value types & Reference types
+
+- Value type
+  
+  - Primitives (int, bool, ..), enums & struct
+  - Usually lives on stack
+  - Assigned & compared by value
+      - `IEquatable of T` for fast comparison
+  - Boxing & unboxing  
+
+- Reference type
+ 
+  - Allocated on heap  
+  - Assigned & compared by reference  
+  - Subject to GC
+
+
+---
+class: inverse
+
+# Heaps in .NET
+
+- SOH (Small Object Heap)
+  - 3 Generations: Gen0, Gen1, Gen2
+  - Mark & sweep
+  - Compacting
+  
+- LOH (Large Object Heap)
+  - Holds objects > *85K*
+  - Free space list
+  - Not compacted
+
+---
+class: inverse
+
+# Heap Allocation
+
+- SOH
+  - Allocation in Gen 0 heap
+  - Consecutive allocation using Next Pointer
+  - Fast and better memory locality
+  - Usually no fragmentation
+  
+- LOH
+  - Free Space table lookup
+  - Internal fragmentation
+
+- Heap expansion
+
+---
+class: inverse
+
+# Garbage collection : Mark & Sweep
+
+## Mark phase
+
+- GC roots
+  - Stack
+  - Statics
+  - CPU registers
+  - F-Reachable (finalizables)
+- Reachability
+- Islands of isolation
+
+---
+class: inverse
+
+# Garbage collection : Mark & Sweep
+ 
+# Sweep phase
+
+- Relocaing: Updates the references to the objects that will be compacted
+- Compacting: Moves objects and reclaims memory
+
+- Gen0 Collection
+  - Most frequest, Least expensive
+  - Object can: Die, Gen0 -> Gen1
+
+- Gen1 Collection
+  - Collects both Gen0 and Gen1 heaps, more expensive
+  - Object can: Die, Gen0 -> Gen1, Gen1 -> Gen2
+
+- Gen2 (Full) Collection
+  - Collects ALL heaps including LOH, most expensive
+  - Object can: Die, Gen0 -> Gen1, Gen1 -> Gen2, be freed from LOH
+  
+---
+class: inverse
+
+# GC & Pinning
+ 
+- Memory are Pinned for native interop
+- GC cannot compact pinned memory in SOH
+- Allocate pinned memory in LOH
+
+---
+class: inverse
+
+# Garbage collection : Server GC
+ 
+- Workstation GC Stops the world
+- Server GC
+
+```xml
+<configuration>
+   <runtime>
+      <gcServer enabled="true|false"/>
+   </runtime>
+</configuration>
+```
+
+https://msdn.microsoft.com/library/ee787088(v=vs.110).aspx#what_happens_during_a_garbage_collection
+
+---
+class: inverse center middle
+
+# Case Study 1: OL Linq Memory Leak
+ 
+![](images/ol-linq-leak.PNG)
+
+---
+class: inverse center middle
+
+# Case Study 2: OL Linq Hang
+ 
+![](images/ol-linq-hang.PNG)
+
+---
+class: inverse center middle
+
+# Case Study 3: Docs Logging Memory Leak
+ 
+![](images/docs-log-leak.PNG)
+
+---
+class: inverse center middle
+
+## Take a Dump and Measure
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
