@@ -1,11 +1,11 @@
-﻿using TalkToSomeone;
-using Google.Protobuf;
+﻿using Google.Protobuf;
 using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Attributes;
 using Newtonsoft.Json;
+using Jil;
 
 [MemoryDiagnoser]
-public class JsonVsProtobuf
+public class JsonVsJilVsProtobuf
 {
     [Benchmark]
     public object proto()
@@ -19,6 +19,12 @@ public class JsonVsProtobuf
     public object json()
     {
         return JsonConvert.DeserializeObject<Message>(JsonConvert.SerializeObject(Data));
+    }
+
+    [Benchmark]
+    public object jil()
+    {
+        return JSON.Deserialize<Message>(JSON.Serialize(Data));
     }
 
     private static readonly Message Data = new Message

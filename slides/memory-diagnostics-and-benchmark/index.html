@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <title>.NET Memory Diagnostics and Benchmark</title>
@@ -131,22 +131,16 @@ class: inverse
 
 # Agenda
 
-- .NET Memory Management Brief
+- .NET Memory Management Basics
 
-- Diagnostics .NET Memory Dumps using Visual Studio
+- BenchmarkDotNet Intro
 
-  - Case Study 1: OL Linq Memory Leak
-
-  - Case Study 2: OL Linq Hang
-
-  - Case Study 3: Docs Logging Memory Leak
-
-- Memory and Performance Benchmark
+- Diagnostics .NET Memory Dumps
 
 ---
 class: inverse
 
-# .NET Memory Management Brief
+# .NET Memory Management Basics
 
 - Stack & heap
 
@@ -260,19 +254,82 @@ class: inverse
 class: inverse
 
 # Garbage collection : Server GC
- 
+         
+https://msdn.microsoft.com/library/ee787088(v=vs.110).aspx#what_happens_during_a_garbage_collection
+
 - Workstation GC Stops the world
 - Server GC
 
 ```xml
 <configuration>
-   <runtime>
-      <gcServer enabled="true|false"/>
+        <runtime>
+        <gcServer enabled="true|false" />
+
    </runtime>
 </configuration>
 ```
 
-https://msdn.microsoft.com/library/ee787088(v=vs.110).aspx#what_happens_during_a_garbage_collection
+---
+class: inverse
+
+# BenchmarkDotNet Intro
+
+https://github.com/dotnet/BenchmarkDotNet
+
+``` csharp
+public class Md5VsSha256
+{
+    /* ... */
+    [Benchmark]
+    public byte[] Sha256() => sha256.ComputeHash(data);
+
+    [Benchmark]
+    public byte[] Md5() => md5.ComputeHash(data);
+}
+
+BenchmarkRunner.Run<Md5VsSha256>();
+```
+
+
+```
+BenchmarkDotNet=v0.10.1, OS=Microsoft Windows NT 6.2.9200.0
+Processor=Intel(R) Core(TM) i7-4702MQ CPU 2.20GHz, ProcessorCount=8
+Frequency=2143476 Hz, Resolution=466.5319 ns, Timer=TSC
+  [Host]     : Clr 4.0.30319.42000, 64bit RyuJIT-v4.6.1586.0
+  DefaultJob : Clr 4.0.30319.42000, 64bit RyuJIT-v4.6.1586.0
+
+| Method |        Mean |    StdDev | Allocated |
+|------- |------------ |---------- |---------- |
+| Sha256 | 130.5169 us | 1.8489 us |     188 B |
+|    Md5 |  25.8010 us | 0.1757 us |     113 B |
+```
+                       
+---
+class: inverse
+
+# BenchmarkDotNet Intro
+
+- Microbenchmarking is hard
+
+  - Generates an isolated project per each benchmark method
+  - Does several launches of this project
+  - Run multiple iterations of the method (include warm-up)
+  - Auto select iteration amount
+  - Overhead evaluation
+
+- Platform/Runtime Metrics
+
+  - Platform (Full Framework/CoreCLR/Mono)
+  - Processor Architecture (x86/x64)
+  - JIT Versions (LegacyJIT/RyuJIT)
+  - GC Flags (Server/Workstation)
+
+- Reports (markdown, csv, html, plain text, png plots)
+
+---
+class: center, middle, inverse
+
+![](http://benchmarkdotnet.org/Images/Overview-RPlot.png)
 
 ---
 class: inverse center middle

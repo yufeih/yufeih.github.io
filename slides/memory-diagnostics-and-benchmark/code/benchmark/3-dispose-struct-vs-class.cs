@@ -1,7 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Attributes;
 using System;
-using System.Diagnostics;
 
 [MemoryDiagnoser]
 public class DisposeStructVsClass

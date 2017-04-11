@@ -6,7 +6,7 @@ using System.Linq;
 
 public class BinarySearchVsDictionaryVsScan
 {
-    [Params(4, 8, 16, 32, 64, 128, 256, 512)]
+    [Params(16, 128, 512)]
     public int Size { get; set; }
 
     private readonly Random _random = new Random(0);

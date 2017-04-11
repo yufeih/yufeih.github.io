@@ -7,7 +7,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace TalkToSomeone {
+
 
   /// <summary>Holder for reflection information generated from message/message.proto</summary>
   public static partial class MessageReflection {
@@ -52,22 +52,22 @@ namespace TalkToSomeone {
             "c2FnZV9zdGF0dXNfZmFpbGVkEANiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::TalkToSomeone.MessageStatus), }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.Message), global::TalkToSomeone.Message.Parser, new[]{ "Id", "From", "To", "Text", "ImageId", "AudioId", "ContactCard", "AudioSeconds", "CreatedAt", "Status", "UserId", "TranslatedText", "PromotionUrl" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.SendTextMessage), global::TalkToSomeone.SendTextMessage.Parser, new[]{ "Id", "From", "Text", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.SendImageMessage), global::TalkToSomeone.SendImageMessage.Parser, new[]{ "Id", "From", "ImageId", "Thumbnail", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.SendAudioMessage), global::TalkToSomeone.SendAudioMessage.Parser, new[]{ "Id", "From", "AudioId", "Duration", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.DeleteMessage), global::TalkToSomeone.DeleteMessage.Parser, new[]{ "Id", "From", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.RecallMessage), global::TalkToSomeone.RecallMessage.Parser, new[]{ "Id", "From", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.TranslateMessage), global::TalkToSomeone.TranslateMessage.Parser, new[]{ "Text", "Translated", "Locale" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.ClearMessages), global::TalkToSomeone.ClearMessages.Parser, new[]{ "From", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.ReadMessage), global::TalkToSomeone.ReadMessage.Parser, new[]{ "From", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.Typing), global::TalkToSomeone.Typing.Parser, new[]{ "From", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.EndTyping), global::TalkToSomeone.EndTyping.Parser, new[]{ "From", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.Speaking), global::TalkToSomeone.Speaking.Parser, new[]{ "From", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.EndSpeaking), global::TalkToSomeone.EndSpeaking.Parser, new[]{ "From", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.JoinConversation), global::TalkToSomeone.JoinConversation.Parser, new[]{ "From", "Name", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TalkToSomeone.LeaveConversation), global::TalkToSomeone.LeaveConversation.Parser, new[]{ "From", "Name", "To" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::MessageStatus), }, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Message), global::Message.Parser, new[]{ "Id", "From", "To", "Text", "ImageId", "AudioId", "ContactCard", "AudioSeconds", "CreatedAt", "Status", "UserId", "TranslatedText", "PromotionUrl" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::SendTextMessage), global::SendTextMessage.Parser, new[]{ "Id", "From", "Text", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::SendImageMessage), global::SendImageMessage.Parser, new[]{ "Id", "From", "ImageId", "Thumbnail", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::SendAudioMessage), global::SendAudioMessage.Parser, new[]{ "Id", "From", "AudioId", "Duration", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DeleteMessage), global::DeleteMessage.Parser, new[]{ "Id", "From", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::RecallMessage), global::RecallMessage.Parser, new[]{ "Id", "From", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::TranslateMessage), global::TranslateMessage.Parser, new[]{ "Text", "Translated", "Locale" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ClearMessages), global::ClearMessages.Parser, new[]{ "From", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ReadMessage), global::ReadMessage.Parser, new[]{ "From", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Typing), global::Typing.Parser, new[]{ "From", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::EndTyping), global::EndTyping.Parser, new[]{ "From", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Speaking), global::Speaking.Parser, new[]{ "From", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::EndSpeaking), global::EndSpeaking.Parser, new[]{ "From", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::JoinConversation), global::JoinConversation.Parser, new[]{ "From", "Name", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::LeaveConversation), global::LeaveConversation.Parser, new[]{ "From", "Name", "To" }, null, null, null)
           }));
     }
     #endregion
@@ -91,7 +91,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[0]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -229,9 +229,9 @@ namespace TalkToSomeone {
 
     /// <summary>Field number for the "Status" field.</summary>
     public const int StatusFieldNumber = 10;
-    private global::TalkToSomeone.MessageStatus status_ = 0;
+    private global::MessageStatus status_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::TalkToSomeone.MessageStatus Status {
+    public global::MessageStatus Status {
       get { return status_; }
       set {
         status_ = value;
@@ -516,7 +516,7 @@ namespace TalkToSomeone {
             break;
           }
           case 80: {
-            status_ = (global::TalkToSomeone.MessageStatus) input.ReadEnum();
+            status_ = (global::MessageStatus) input.ReadEnum();
             break;
           }
           case 90: {
@@ -544,7 +544,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[1]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -751,7 +751,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[2]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -980,7 +980,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[3]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1212,7 +1212,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[4]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1385,7 +1385,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[5]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1558,7 +1558,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[6]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1731,7 +1731,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[7]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1876,7 +1876,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[8]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2021,7 +2021,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[9]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2166,7 +2166,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[10]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2311,7 +2311,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[11]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2456,7 +2456,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[12]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2601,7 +2601,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[13]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2774,7 +2774,7 @@ namespace TalkToSomeone {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::TalkToSomeone.MessageReflection.Descriptor.MessageTypes[14]; }
+      get { return global::MessageReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2942,6 +2942,5 @@ namespace TalkToSomeone {
 
   #endregion
 
-}
 
 #endregion Designer generated code
