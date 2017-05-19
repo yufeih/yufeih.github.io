@@ -4,10 +4,10 @@ class Program
 {
     public static void Main(string[] args)
     {
-        //BenchmarkRunner.Run<JsonVsJilVsProtobuf>();
+        BenchmarkRunner.Run<JilSerializeDynamicVsGenericSpecialization>();
 
         //OlLinqLeak.Run();
         //OlLinqHang.Run();
         //DocsLogLeak.Run();
-    }
+    } 
 }
