@@ -26,6 +26,19 @@ public class JilSerializeDynamicVsGenericSpecialization
         return _serialize(Data, Options.Default);
     }
 
+    [Benchmark]
+    public object serialize_generic_reflection()
+    {
+        return _serializeReflection.Invoke(null, new object[] { Data, Options.Default });
+    }
+
+    private static readonly MethodInfo _serializeReflection =
+        typeof(JSON)
+            .GetTypeInfo()
+            .GetDeclaredMethods("Serialize")
+            .First(m => m.ReturnParameter.ParameterType == typeof(string))
+            .MakeGenericMethod(typeof(Message));
+
     private static readonly Func<Message, Options, string> _serialize = (Func<Message, Options, string>)
         typeof(JSON)
             .GetTypeInfo()
