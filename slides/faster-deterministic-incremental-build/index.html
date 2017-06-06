@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fast Deterministic Incremental Build</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Fast Deterministic Incremental Build
+
+---
+
+# Build Challenges
+
+- Large volumn + frequent change
+    - Incremental build to help
+- Incremental build is conceptually a different pipeline than full build
+    - Diff with last build
+    - Hard to garrentee same result as full build
+- Diverse languages: C#, Javascript, Python, Ruby ...
+    - Incremental only lightup for some part of C# build step
+    - CI written in a different language just to transform data between repos
+- Fixed proprietary backend (OPS)
+    - Reinvent CI: source control management, Github integration, build scheduler, email notification...
+    - Unable to run on other backends like VSTS, AppVeyor, Travis, Jeckins...
+
+---
+
+# {Fast + Correct} Choose two
+
+Inspired by:
+
+- [Bazel](https://bazel.build)
+- [Domino Build](https://www.1eswiki.com/wiki/Domino)
+
+---
+
+# Ideas
+
+- Pure function
+    - The function always evaluates the same output given the same input
+    - The function output cannot depend on any hidden state including I/O
+    - Evaluation of the output does not cause any observable side effect
+- Pure function cache
+    - Maps input hash to output hash
+    - Use the cached output hash for the same set of input hash
+
+---
+
+# {Fast + Correct} Choose two
+
+Fast
+- Incremental build everywhere
+
+Correct
+- No diffing
+- Incremental builds are conceptually the same as full build, and virtually always correct,
+it's not necessary to run a clean build "just in case" to ensure correctness
+
+---
+
+# Why NOT Bazel or Domino
+
+- Smallest build step is a process
+    - We typically have a single process processing huge amount of files
+- Platform limitations
+    - Bazel lacks windows support
+    - Domino is internal only
+- Not containerized
+    - See [why containers]() later
+- Fun
+
+---
+
+### {Fast + Correct + **Cross Language**} Choose three
+
+- Build steps modeled as *stateless* HTTP API call
+- Build steps written in *best fit* language:
+    - Ruby for shopify/liquid
+    - Python for pydoc
+    - Javascript for jsdoc
+- Build orchestrator
+    - Coordinate build steps
+    - Cache build result and perform incremental build
+    - Scriptable using `javascript`
+- Deployed as *Docker Container*
+    - Run build locally with reliable reproducability
+    - Run build on any docker enabled CI platform (VSTS, AppVeyor...)
+    - Strong versioning: simple and always up to date
+
+---
+
+### {Fast + Correct + **Cross Language**} Choose three
+
+Why HTTP and Containers?
+
+- Approaches to incremental build:
+    - Build a library for each supported language
+        - *O(N)*
+    - Build a C libary and provide binding for each supported language
+        - *1 + O(N)*
+    - Build an orchestrator and let libraries talk to each other `&#x2713;`
+        - *1 + O(N)*
+        - The orchestrator can be written in *any* language
+
+- Most languages can start a simple HTTP server in several lines of code
+- Container solve the problem of framework installation, deployment, update, reproducability...
+
+---
+
+# Sample
+
+Services
+- Markdown Service in C#
+    - `render_markdown(markdown) -> html`
+    - `extract_yaml_header(markdown) -> metadata`
+- Liquid Service in Ruby
+    - `apply_liquid(html, metadata) -> templated_html`
+
+Orchestrator Build Script
+
+``` javascript
+for (var md in glob('/src/**/*.md')) {
+  var html = render_markdown(md)
+  var metadata = extract_yaml_header(md)
+  var templated_html = apply_liquid(html, metadata)
+  output(`/dist/${md.name}.html`, templated_html)
+}
+```
+
+---
+# Sample
+
+``` javascript
+for (var md in glob('/src/**/*.md')) {
+  var html = render_markdown(md)
+  var metadata = extract_yaml_header(md)
+  var templated_html = apply_liquid(html, metadata)
+  output(`/dist/${md.name}.html`, templated_html)
+}
+```
+
+- On cache hit:  
+  `html`, `metadata`, `templated_html` are all hashes.  
+  Loop body is optimized to 3 cache lookups and a cache content copy.  
+  All unchanged content fall in this category.
+
+- On cache miss:  
+  `render_markdown`, `extract_yaml_header`, `apply_liquid`
+  calls the corresponding service through HTTP API.
+
+- In case `render_markdown` and `extract_yaml_header` produces results
+  already in the case, `apply_liquid` becomes cache lookup.  
+  E.g. adding a newline to markdown that does not affect output html
+
+---
+class: center middle
+
+# Q & A
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+    <style>
+      @import url('https://fonts.googleapis.com/css?family=Open+Sans|Khula|Ubuntu+Mono');
+
+      body {
+        font-family: 'Open Sans';
+      }
+      h1, h2, h3 {
+        font-family: 'Khula';
+        font-weight: 400;
+        margin-bottom: 0;
+      }
+      .remark-slide-content h1 { font-size: 3em; }
+      .remark-slide-content h2 { font-size: 2em; }
+      .remark-slide-content h3 { font-size: 1.6em; }
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      li p { line-height: 1.25em; }
+      .red { color: #fa0000; }
+      .large { font-size: 2em; }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      code {
+        background: #e7e8e2;
+        border-radius: 5px;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-code-line-highlighted     { background-color: #373832; }
+      .pull-left {
+        float: left;
+        width: 47%;
+      }
+      .pull-right {
+        float: right;
+        width: 47%;
+      }
+      .pull-right ~ p {
+        clear: both;
+      }
+      #slideshow .slide .content code {
+        font-size: 0.8em;
+      }
+      #slideshow .slide .content pre code {
+        font-size: 0.9em;
+        padding: 15px;
+      }
+      /* Slide-specific styling */
+      #slide-inverse .footnote {
+        bottom: 12px;
+        left: 20px;
+      }
+      #slide-how .slides {
+        font-size: 0.9em;
+        position: absolute;
+        top:  151px;
+        right: 140px;
+      }
+      #slide-how .slides h3 {
+        margin-top: 0.2em;
+      }
+      #slide-how .slides .first, #slide-how .slides .second {
+        padding: 1px 20px;
+        height: 90px;
+        width: 120px;
+        -moz-box-shadow: 0 0 10px #777;
+        -webkit-box-shadow: 0 0 10px #777;
+        box-shadow: 0 0 10px #777;
+      }
+      #slide-how .slides .first {
+        background: #fff;
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        z-index: 1;
+      }
+      #slide-how .slides .second {
+        position: relative;
+        background: #fff;
+        z-index: 0;
+      }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+      }
+      .remark-container { background-color: white }
+      .remark-slide-scaler { box-shadow: 0 0 }
+    </style>
+  </body>
+</html>
