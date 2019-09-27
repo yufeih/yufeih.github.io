@@ -133,19 +133,7 @@ class: inverse
 
 # Data Driven Tests
 
-### Test data and logic separation
-
-- Easy to add, modify, review test cases
-- Easy to prove test correctness
-
-### >92% test coverage in docfx v3
-
----
-class: inverse
-
-# Writing Data Driven Tests
-
-### Simple data driven test with xunit
+Simple data driven test with xunit:
 
 ```csharp
 public class DataDrivenTest
@@ -162,13 +150,37 @@ public class DataDrivenTest
 ---
 class: inverse
 
+# Data Driven Tests in docfx
+
+Example PR: https://github.com/dotnet/docfx/pull/5072/files
+
+- Each test describes a scenario in YAML, easy to read, write and review
+
+- Test data and logic separation, tests are __correct__ by default
+
+- Decoupled from source code, less friction against change
+
+End result:
+
+- \> 1600 tests
+
+- \> 92% test coverage
+
+- Confident to do daily production deployment
+
+---
+class: inverse
+
 # Demo
 
-### 1. DocAsTest
-### 2. JsonDiff
-### 3. Web API test using DocAsTest + JsonDiff
+Source: http://github.com/yufeih/docastest-demo
 
-Source code: http://github.com/yufeih/docastest-demo
+1. Microsoft.DocAsTest
+
+2. JsonDiff
+
+3. Web API test using Microsoft.DocAsTest + JsonDiff
+
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
     </script>
