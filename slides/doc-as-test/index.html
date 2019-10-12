@@ -122,18 +122,14 @@
   <body>
     <textarea id="source">
 
-class: center, middle, inverse
+class: middle
 
 # Data Driven Tests with Markdown & Yaml
 
 Yufei Huang
 
 ---
-class: inverse
-
-# Data Driven Tests
-
-Simple data driven test with xunit:
+# Data Driven Tests using xunit
 
 ```csharp
 public class DataDrivenTest
@@ -148,39 +144,83 @@ public class DataDrivenTest
 }
 ```
 ---
-class: inverse
+# Data Driven Tests using xunit
 
+```csharp
+public class DataDrivenTest
+{
+  [Theory]
+  [InlineData(1, 1, 2)]
+  [InlineData(123, 456, 579)]
+  public void AddTest(int a, int b, int sum)
+  {
+    Assert.Equal(sum, a + b);
+  }
+}
+```
+
+Drawbacks:
+
+- Tests are __not__ running in parallel. `xunit` parallelism is per class.
+
+- Not readable when test data is complex
+---
 # Data Driven Tests in docfx
 
-Example PR: https://github.com/dotnet/docfx/pull/5072/files
+Design goals
 
-- Each test describes a scenario in YAML, easy to read, write and review
+- Seperate test data and logic
 
-- Test data and logic separation, tests are __correct__ by default
+- Easy to _review_, _write_ and _modify_ tests
 
-- Decoupled from source code, less friction against change
+- Fast by running tests in parallel
 
-End result:
+- Works with Visual Studio test explorer
 
-- \> 1600 tests
-
-- \> 92% test coverage
-
-- Confident to do daily production deployment
+- Decouple test code from dev code, for easy refactor and less mock
 
 ---
-class: inverse
+# Data Driven Tests in docfx
 
-# Demo
+Design goals
 
-Source: http://github.com/yufeih/docastest-demo
+- Seperate test data and logic
 
-1. Microsoft.DocAsTest
+- Easy to _review_, _write_ and _modify_ tests
 
-2. JsonDiff
+- Fast by running tests in parallel
 
-3. Web API test using Microsoft.DocAsTest + JsonDiff
+- Works with Visual Studio test explorer
 
+- Decouple test code from dev code, for easy refactor and less mock
+
+Result
+
+- \> 1600 tests, \> 92% test coverage
+
+- Confident to deploy production daily
+
+---
+# Introducing Microsoft.DocAsTest
+
+We wrote a tool `Microsoft.DocAsTest` to write data driven test:
+
+- The concept behind `Microsoft.DocAsTest`
+
+- The concept behind `JsonDiff`
+
+- Web API test using `Microsoft.DocAsTest` + `JsonDiff`
+
+---
+class: middle
+
+# Q & A
+
+Try and give us feedback!
+
+Project: https://github.com/dotnet/docfx/blob/v3/src/Microsoft.DocAsTest
+
+Demo: http://github.com/yufeih/docastest-demo
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
     </script>
