@@ -39,6 +39,7 @@ body {
   min-height: 100vh;
   flex-direction: column;
   padding: 0 2%;
+  border-top: 5px solid $brand-color;
 
   @media screen and (min-width: $on-medium) {
     padding: 0 5%;
