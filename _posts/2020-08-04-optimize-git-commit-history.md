@@ -56,11 +56,11 @@ However the memory consumption becomes high as all these git objects are loaded 
 > NOTE: chopping off bits from SHA-1 hash does have security implications. In our case the commit history is mainly for contributor list so this optimization does not harm the system.
 
 
-## Share `git log` Results Between Files
+## Share `git log` Result Between Files
 
 Calculating git commit history requires a topology sort, this is usually very fast but when repeated in `15,000` files, it becomes a waste of time. If we calculate the commit history of the repository, each file can reuse the repository level commit history without having to do its own topology sort, because they share the same order. The repository level commit history is also useful for other features in [docs] like producing the correct `updated_at` time so they are needed anyway. Sharing the same sorted history this way also gives substantial performance wins.
 
-## Cache `git log` History on Disk for Subsequent Build
+## Cache `git log` Result for Subsequent Build
 
 
 
