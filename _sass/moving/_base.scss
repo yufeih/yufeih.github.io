@@ -25,27 +25,17 @@ figure {
   * Basic styling
   */
 body {
-  font: $base-font-weight #{$small-font-size}/#{$small-line-height}
-    $base-font-family;
+  font-family: $base-font-family;
+  font-size: 17px;
+  line-height: 30px;
   color: $text-color;
   background-color: $background-color;
   -webkit-text-size-adjust: 100%;
-  -webkit-font-feature-settings: "kern" 1;
-  -moz-font-feature-settings: "kern" 1;
-  -o-font-feature-settings: "kern" 1;
-  font-feature-settings: "kern" 1;
-  font-kerning: normal;
   display: flex;
   min-height: 100vh;
   flex-direction: column;
   padding: 0 2%;
   border-top: 5px solid $brand-color;
-
-  @media screen and (min-width: $on-medium) {
-    padding: 0 5%;
-    font: $base-font-weight #{$base-font-size}/#{$base-line-height}
-      $base-font-family;
-  }
 }
 
 /**
@@ -173,7 +163,11 @@ blockquote {
 /**
   * Code formatting
   */
-pre,
+pre {
+  border-radius: 12px;
+  background-color: darken(#f6f8fa, 3%);
+}
+
 code {
   border-radius: 6px;
   background-color: darken(#f6f8fa, 3%);
