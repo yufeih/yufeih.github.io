@@ -105,7 +105,6 @@ img {
   margin-top: 5px;
   padding: 2px 2px;
   border-radius: 3px;
-  background-color: lighten($grey-color-light, 3%);
   max-width: 100%;
   vertical-align: middle;
 }
@@ -154,11 +153,7 @@ h6 {
   */
 a {
   color: $brand-color;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
+  text-decoration: underline;
 }
 
 /**
@@ -169,11 +164,6 @@ blockquote {
   border-left: 4px solid $grey-color-light;
   padding-left: $spacing-unit / 2;
   @include relative-font-size(1);
-  letter-spacing: -1px;
-
-@media (max-width: 600px) {
-  @include relative-font-size(0.8);
-}
 
   > :last-child {
     margin-bottom: 0;
@@ -185,16 +175,16 @@ blockquote {
   */
 pre,
 code {
-  @include relative-font-size(0.9);
-  border: 1px solid darken($grey-color-light, 6%);
+  border-radius: 6px;
+  background-color: darken(#f6f8fa, 3%);
 }
 
 code {
-  padding: 1px 1px;
+  padding: 2px 6px;
 }
 
 pre {
-  padding: 2px 2px;
+  padding: 12px 12px;
   overflow-x: auto;
 
   > code {
@@ -236,10 +226,6 @@ pre {
 /**
   * Icons
   */
-
-.orange {
-  color: $orange-color;
-}
 
 .grey {
   color: $grey-color;

@@ -3,8 +3,6 @@ layout: post
 title: Optimizing Git Contributor List
 ---
 
-# Optimizing Git Contributor List
-
 There is a nice feature on [docs] that shows the portraits of contributors to a docs page. Despite the tiny screen space they took, the time to calculate this list can be suprisingly high.
 
 ![docs contributor list](/assets/docs-contributor-list.png)
