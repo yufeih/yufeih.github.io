@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Use C# 8 Nullable Reference Type in docfx 3
+title: Use C# 8 nullable reference type in docfx 3
 ---
 
 [Docfx 2](https://github.com/dotnet/docfx) has long been bothered by this [billion dollar mistake](https://en.wikipedia.org/wiki/Tony_Hoare). There are crashes caused by [`NullReferenceException`](https://github.com/dotnet/docfx/search?q=nullreferenceexception&type=Issues) every now and then. In the early days of [docfx 3](https://github.com/dotnet/docfx/tree/v3), when we were discussing the engineering guidelines, C# team is already prototyping the idea of [nullable reference types](https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references) (or _non-nullable reference types_). Known that `NullReferenceException` is a big pain and that there is likely a language feature to prevent it, I sketched a [strategy](#the-null-strategy) on `null` handling for docfx 3.
